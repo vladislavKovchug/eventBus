@@ -1,18 +1,27 @@
+function ChatMessage(sender, text)
+{
+    this.sender = sender;
+    this.text = text;
+}
+
 function EventBus(eventBusName){
     this.name = eventBusName;
-    this.consumers = [];
+    this.consumers = {};
 }
 
-EventBus.prototype.registerConsumer = function(consumer){
-    this.consumers.push(consumer);
+EventBus.prototype.registerConsumer = function(type, consumer){
+    if(!this.consumers[type]){
+        this.consumers[type] = []
+    }
+    this.consumers[type].push(consumer);
 }
 
-EventBus.prototype.sendMessage = function(message){
-    for(var i=0; i<this.consumers.length; i++){
+EventBus.prototype.sendMessage = function(type, message){
+    for(var i=0; i<this.consumers[type].length; i++){
         setTimeout(function(consumer){
             return function(){
                 consumer(message);
             }
-        }(this.consumers[i]), 1000);
+        }(this.consumers[type][i]), 100);
     }
 }
