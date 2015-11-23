@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Unit.js tests in the browser with Mocha</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/mocha.css" />
+	
+	<script src="../lib/eventbus.js"></script>
+	<script src="../lib/jquery-2.1.4.min.js"></script>
+	<script src="../js/chatroom.js"></script>
+	<script src="../js/common.js"></script>
+	
+  </head>
+
+  <body>
+    <h1>Unit.js tests in the browser with Mocha</h1>
+    <div id="mocha"></div>
+    <script src="lib/mocha.js"></script>
+    <script src="lib/unit.js"></script>
+    <script>
+      mocha.setup('bdd');
+    </script>
+    <!-- <script src="tests-unit.js"></script> -->
+    <script src="js/test.js"></script>
+    <script>
+      var runner = mocha.run();
+
+      //* (Un)comment if you want display the stats in the header
+      runner.on('test end', function() {
+        'use strict';
+        if(!$('#mocha-stats').has('li.assertions').length) {
+
+          $('#mocha-stats')
+            .prepend('<li><strong>Test cases:</strong></li>')
+            .append(
+              '<li>for</li>' +
+              '<li class="assertions">' +
+              '<em>' + unitjs.stats.total.assertions + '</em> ' +
+              '<a href="#assertions-stats">assertions:</a> </li>'
+            )
+          ;
+        }
+
+        $('#mocha-stats li.assertions em').text(unitjs.stats.total.assertions);
+      });
+      //*/
+
+      runner.on('end', function() {
+        'use strict';
+        
+        var total = unitjs.stats.total.assertions;
+        var details = '';
+
+        $('#mocha-stats li.assertions em').text(total);
+
+        for(var name in unitjs.stats.assertions) {
+          details +=
+            '<tr>' +
+              '<td>'+ name + '</td>' +
+              '<td><em>'+ unitjs.stats.assertions[name] +'</em></td>' +
+            '</tr>';
+        }
+
+
+        $('body').append('<div id="assertions-stats">' +
+          '<h2>Assertions stats</h2>' +
+          '<p>Total assertions executed: <em>' + total + '</em></p>' +
+          '<h3>Details:</h3><table>'+ details + '</table></div>'
+        );
+      });
+    </script>
+  </body>
+</html>
