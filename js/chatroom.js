@@ -23,8 +23,8 @@ function ChatRoom(eventBus){
 function ChatRoomService(){
     return {
         "checkMessage": function(message){
-			message.text = message.text.replace('fuck', '????');
-			return message;
+			var result = new ChatMessage(message.sender, message.text.replace('fuck', '????'));
+			return result;
         }
     }
 }
